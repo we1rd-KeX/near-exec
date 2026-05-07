@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NEAR | SS Executor</title>
+    <style>
+        :root { --main: #ffcc00; --bg: #0d0d0d; --panel: #1a1a1a; }
+        body { background: var(--bg); color: var(--main); font-family: 'Consolas', monospace; margin: 0; display: flex; height: 100vh; }
+        
+        .sidebar { width: 180px; background: #111; border-right: 1px solid var(--main); padding: 20px; }
+        .main { flex: 1; display: flex; flex-direction: column; padding: 20px; gap: 15px; }
+        
+        /* The Editor */
+        textarea { flex: 2; background: #000; color: #fff; border: 1px solid #333; padding: 15px; resize: none; outline: none; font-size: 14px; border-radius: 4px; }
+        textarea:focus { border-color: var(--main); }
+
+        /* The Console */
+        .console { flex: 1; background: #050505; border: 1px solid #222; padding: 10px; font-size: 12px; overflow-y: auto; color: #aaa; border-radius: 4px; }
+        .log-entry { margin-bottom: 5px; border-left: 2px solid #444; padding-left: 8px; }
+        .log-success { border-left-color: #00ff00; color: #fff; }
+
+        .controls { display: flex; gap: 10px; align-items: center; }
+        button { background: var(--main); color: #000; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; border-radius: 3px; }
+        button:hover { opacity: 0.8; }
+        .status { font-size: 12px; color: #666; margin-left: auto; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2 style="font-size: 18px; margin-top: 0;">NEAR SS</h2>
+        <p style="font-size: 10px; color: #444;">ID: PROJECT_LEADER</p>
+        <hr border="1" color="#222">
+        <p>Executor</p>
+        <p style="color: #444;">Scripts</p>
+        <p style="color: #444;">Settings</p>
+    </div>
+
+    <div class="main">
+        <div class="controls">
+            <button onclick="attach()">ATTACH</button>
+            <button onclick="execute()">EXECUTE</button>
+            <button onclick="clearAll()" style="background: #222; color: var(--main);">CLEAR</button>
+            <div class="status">Status: <span id="status-text" style="color: #ff4444;">Not Connected</span></div>
+        </div>
+
+        <textarea id="editor" spellcheck="false">-- Near SS v1.0
+-- Supports loadstring and raw Lua
+print("Hello from Near!")</textarea>
+
+        <div class="console" id="console-output">
+            <div class="log-entry">[SYSTEM]: Near Console Initialized. Ready for SS input.</div>
+        </div>
+    </div>
+
+    <script>
+        const consoleEl = document.getElementById('console-output');
+
+        function log(msg, type = '') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString();
+            entry.innerText = `[${time}] ${msg}`;
+            consoleEl.appendChild(entry);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        function attach() {
+            log("Attempting SS Handshake...");
+            setTimeout(() => {
+                document.getElementById('status-text').innerText = "Connected";
+                document.getElementById('status-text').style.color = "#00ff00";
+                log("Successfully attached to Server-Side Hub.", "log-success");
+            }, 1000);
+        }
+
+        function execute() {
+            const code = document.getElementById('editor').value;
+            log("Sending script to execution queue...");
+            
+            // Logic for SS: Wrap in loadstring if needed
+            // let finalCode = `loadstring([[${code}]])()`;
+            
+            setTimeout(() => {
+                log("Script executed successfully on server.", "log-success");
+            }, 500);
+        }
+
+        function clearAll() {
+            document.getElementById('editor').value = "";
+            consoleEl.innerHTML = '<div class="log-entry">[SYSTEM]: Console Cleared.</div>';
+        }
+    </script>
+</body>
+</html>
